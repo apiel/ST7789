@@ -4,6 +4,12 @@
 #include "config.h"
 #include "spi.h"
 
+#define DISPLAY_SET_CURSOR_X 0x2A
+#define DISPLAY_SET_CURSOR_Y 0x2B
+#define DISPLAY_WRITE_PIXELS 0x2C
+
+#define BYTESPERPIXEL 2
+
 void sendAddr(uint8_t cmd, uint16_t addr0, uint16_t addr1)
 {
   uint8_t addr[4] = {(uint8_t)(addr0 >> 8), (uint8_t)(addr0 & 0xFF), (uint8_t)(addr1 >> 8), (uint8_t)(addr1 & 0xFF)};
@@ -15,7 +21,7 @@ void drawPixel(uint16_t x, uint16_t y, uint16_t color)
   sendAddr(DISPLAY_SET_CURSOR_X, (uint16_t)x, (uint16_t)x);
   sendAddr(DISPLAY_SET_CURSOR_Y, (uint16_t)y, (uint16_t)y);
 
-  uint8_t data[SPI_BYTESPERPIXEL] = {color >> 8, color & 0xFF};
+  uint8_t data[BYTESPERPIXEL] = {color >> 8, color & 0xFF};
   sendCmd(DISPLAY_WRITE_PIXELS, data, 2);
 }
 
@@ -26,10 +32,10 @@ void drawFillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color
     sendAddr(DISPLAY_SET_CURSOR_X, x, x + w);
     sendAddr(DISPLAY_SET_CURSOR_Y, y + yPos, y + yPos);
 
-    uint16_t size = w * SPI_BYTESPERPIXEL;
+    uint16_t size = w * BYTESPERPIXEL;
     uint8_t pixels[size];
-    uint8_t pixel[SPI_BYTESPERPIXEL] = {color >> 8, color & 0xFF};
-    for (uint16_t i = 0; i < size; i += SPI_BYTESPERPIXEL)
+    uint8_t pixel[BYTESPERPIXEL] = {color >> 8, color & 0xFF};
+    for (uint16_t i = 0; i < size; i += BYTESPERPIXEL)
     {
       pixels[i] = pixel[0];
       pixels[i + 1] = pixel[1];

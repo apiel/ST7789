@@ -52,6 +52,8 @@
 #define GPIO_SPI0_CE0 8   // Pin P1-24, CE0 when SPI0 in use
 #define GPIO_SPI0_CE1 7   // Pin P1-26, CE1 when SPI0 in use
 
+#define DISPLAY_SPI_DRIVE_SETTINGS (1 | BCM2835_SPI0_CS_CPOL | BCM2835_SPI0_CS_CPHA)
+
 extern volatile void *bcm2835;
 
 typedef struct GPIORegisterFile
