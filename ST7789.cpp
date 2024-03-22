@@ -64,48 +64,44 @@ void InitSPIDisplay()
   spi->clk = 34;
   __sync_synchronize();
 
-  BEGIN_SPI_COMMUNICATION();
-  {
-    // usleep(120*1000);
-    sendCmd(0x11 /*Sleep Out*/);
-    usleep(120 * 1000);
-    sendCmd(0x3A /*COLMOD: Pixel Format Set*/, 0x05 /*16bpp*/);
-    usleep(20 * 1000);
+  sendCmd(0x11 /*Sleep Out*/);
+  usleep(120 * 1000);
+  sendCmd(0x3A /*COLMOD: Pixel Format Set*/, 0x05 /*16bpp*/);
+  usleep(20 * 1000);
 
 #define MADCTL_COLUMN_ADDRESS_ORDER_SWAP (1 << 6)
 #define MADCTL_ROW_ADDRESS_ORDER_SWAP (1 << 7)
 #define MADCTL_ROTATE_180_DEGREES (MADCTL_COLUMN_ADDRESS_ORDER_SWAP | MADCTL_ROW_ADDRESS_ORDER_SWAP)
 
-    uint8_t madctl = 0;
-    madctl |= MADCTL_ROW_ADDRESS_ORDER_SWAP;
-    madctl ^= MADCTL_ROTATE_180_DEGREES;
+  uint8_t madctl = 0;
+  madctl |= MADCTL_ROW_ADDRESS_ORDER_SWAP;
+  madctl ^= MADCTL_ROTATE_180_DEGREES;
 
-    sendCmd(0x36 /*MADCTL: Memory Access Control*/, madctl);
-    usleep(10 * 1000);
+  sendCmd(0x36 /*MADCTL: Memory Access Control*/, madctl);
+  usleep(10 * 1000);
 
-    sendCmd(0xBA /*DGMEN: Enable Gamma*/, 0x04);
+  sendCmd(0xBA /*DGMEN: Enable Gamma*/, 0x04);
 
-    sendCmd(0x21 /*Display Inversion On*/);
-    // sendCmd(0x20 /*Display Inversion Off*/);
+  sendCmd(0x21 /*Display Inversion On*/);
+  // sendCmd(0x20 /*Display Inversion Off*/);
 
-    sendCmd(0x13 /*NORON: Partial off (normal)*/);
-    usleep(10 * 1000);
+  sendCmd(0x13 /*NORON: Partial off (normal)*/);
+  usleep(10 * 1000);
 
-    // The ST7789 controller is actually a unit with 320x240 graphics memory area, but only 240x240 portion
-    // of it is displayed. Therefore if we wanted to swap row address mode above, writes to Y=0...239 range will actually land in
-    // memory in row addresses Y = 319-(0...239) = 319...80 range. To view this range, we must scroll the view by +80 units in Y
-    // direction so that contents of Y=80...319 is displayed instead of Y=0...239.
-    if ((madctl & MADCTL_ROW_ADDRESS_ORDER_SWAP))
-    {
-      uint8_t data[4] = {0, 0, (uint8_t)(240 >> 8), (uint8_t)(240 & 0xFF)};
-      sendCmd(0x37 /*VSCSAD: Vertical Scroll Start Address of RAM*/, data, 4);
-    }
-
-    drawFillRect(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, 0); // clear screen
-
-    sendCmd(/*Display ON*/ 0x29);
-    usleep(100 * 1000);
+  // The ST7789 controller is actually a unit with 320x240 graphics memory area, but only 240x240 portion
+  // of it is displayed. Therefore if we wanted to swap row address mode above, writes to Y=0...239 range will actually land in
+  // memory in row addresses Y = 319-(0...239) = 319...80 range. To view this range, we must scroll the view by +80 units in Y
+  // direction so that contents of Y=80...319 is displayed instead of Y=0...239.
+  if ((madctl & MADCTL_ROW_ADDRESS_ORDER_SWAP))
+  {
+    uint8_t data[4] = {0, 0, (uint8_t)(240 >> 8), (uint8_t)(240 & 0xFF)};
+    sendCmd(0x37 /*VSCSAD: Vertical Scroll Start Address of RAM*/, data, 4);
   }
+
+  drawFillRect(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, 0); // clear screen
+
+  sendCmd(/*Display ON*/ 0x29);
+  usleep(100 * 1000);
 
   // And speed up to the desired operation speed finally after init is done.
   usleep(10 * 1000); // Delay a bit before restoring CLK, or otherwise this has been observed to cause the display not init if done back to back after the clear operation above.

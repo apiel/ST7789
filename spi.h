@@ -1,7 +1,7 @@
 #pragma once
 
 #include <inttypes.h>
-#include <unistd.h> // usleep
+#include <unistd.h>   // usleep
 #include <stdio.h>    // printf, stderr
 #include <fcntl.h>    // open, O_RDWR, O_SYNC
 #include <sys/mman.h> // mmap, munmap
@@ -9,65 +9,65 @@
 
 #include "config.h"
 
-#define BCM2835_GPIO_BASE                    0x200000   // Address to GPIO register file
-#define BCM2835_SPI0_BASE                    0x204000   // Address to SPI0 register file
-#define BCM2835_TIMER_BASE                   0x3000     // Address to System Timer register file
+#define BCM2835_GPIO_BASE 0x200000 // Address to GPIO register file
+#define BCM2835_SPI0_BASE 0x204000 // Address to SPI0 register file
+#define BCM2835_TIMER_BASE 0x3000  // Address to System Timer register file
 
-#define BCM2835_SPI0_CS_RXF                  0x00100000 // Receive FIFO is full
-#define BCM2835_SPI0_CS_RXR                  0x00080000 // FIFO needs reading
-#define BCM2835_SPI0_CS_TXD                  0x00040000 // TXD TX FIFO can accept Data
-#define BCM2835_SPI0_CS_RXD                  0x00020000 // RXD RX FIFO contains Data
-#define BCM2835_SPI0_CS_DONE                 0x00010000 // Done transfer Done
-#define BCM2835_SPI0_CS_ADCS                 0x00000800 // Automatically Deassert Chip Select
-#define BCM2835_SPI0_CS_INTR                 0x00000400 // Fire interrupts on RXR?
-#define BCM2835_SPI0_CS_INTD                 0x00000200 // Fire interrupts on DONE?
-#define BCM2835_SPI0_CS_DMAEN                0x00000100 // Enable DMA transfers?
-#define BCM2835_SPI0_CS_TA                   0x00000080 // Transfer Active
-#define BCM2835_SPI0_CS_CLEAR                0x00000030 // Clear FIFO Clear RX and TX
-#define BCM2835_SPI0_CS_CLEAR_RX             0x00000020 // Clear FIFO Clear RX
-#define BCM2835_SPI0_CS_CLEAR_TX             0x00000010 // Clear FIFO Clear TX
-#define BCM2835_SPI0_CS_CPOL                 0x00000008 // Clock Polarity
-#define BCM2835_SPI0_CS_CPHA                 0x00000004 // Clock Phase
-#define BCM2835_SPI0_CS_CS                   0x00000003 // Chip Select
+#define BCM2835_SPI0_CS_RXF 0x00100000      // Receive FIFO is full
+#define BCM2835_SPI0_CS_RXR 0x00080000      // FIFO needs reading
+#define BCM2835_SPI0_CS_TXD 0x00040000      // TXD TX FIFO can accept Data
+#define BCM2835_SPI0_CS_RXD 0x00020000      // RXD RX FIFO contains Data
+#define BCM2835_SPI0_CS_DONE 0x00010000     // Done transfer Done
+#define BCM2835_SPI0_CS_ADCS 0x00000800     // Automatically Deassert Chip Select
+#define BCM2835_SPI0_CS_INTR 0x00000400     // Fire interrupts on RXR?
+#define BCM2835_SPI0_CS_INTD 0x00000200     // Fire interrupts on DONE?
+#define BCM2835_SPI0_CS_DMAEN 0x00000100    // Enable DMA transfers?
+#define BCM2835_SPI0_CS_TA 0x00000080       // Transfer Active
+#define BCM2835_SPI0_CS_CLEAR 0x00000030    // Clear FIFO Clear RX and TX
+#define BCM2835_SPI0_CS_CLEAR_RX 0x00000020 // Clear FIFO Clear RX
+#define BCM2835_SPI0_CS_CLEAR_TX 0x00000010 // Clear FIFO Clear TX
+#define BCM2835_SPI0_CS_CPOL 0x00000008     // Clock Polarity
+#define BCM2835_SPI0_CS_CPHA 0x00000004     // Clock Phase
+#define BCM2835_SPI0_CS_CS 0x00000003       // Chip Select
 
-#define BCM2835_SPI0_CS_RXF_SHIFT                  20
-#define BCM2835_SPI0_CS_RXR_SHIFT                  19
-#define BCM2835_SPI0_CS_TXD_SHIFT                  18
-#define BCM2835_SPI0_CS_RXD_SHIFT                  17
-#define BCM2835_SPI0_CS_DONE_SHIFT                 16
-#define BCM2835_SPI0_CS_ADCS_SHIFT                 11
-#define BCM2835_SPI0_CS_INTR_SHIFT                 10
-#define BCM2835_SPI0_CS_INTD_SHIFT                 9
-#define BCM2835_SPI0_CS_DMAEN_SHIFT                8
-#define BCM2835_SPI0_CS_TA_SHIFT                   7
-#define BCM2835_SPI0_CS_CLEAR_RX_SHIFT             5
-#define BCM2835_SPI0_CS_CLEAR_TX_SHIFT             4
-#define BCM2835_SPI0_CS_CPOL_SHIFT                 3
-#define BCM2835_SPI0_CS_CPHA_SHIFT                 2
-#define BCM2835_SPI0_CS_CS_SHIFT                   0
+#define BCM2835_SPI0_CS_RXF_SHIFT 20
+#define BCM2835_SPI0_CS_RXR_SHIFT 19
+#define BCM2835_SPI0_CS_TXD_SHIFT 18
+#define BCM2835_SPI0_CS_RXD_SHIFT 17
+#define BCM2835_SPI0_CS_DONE_SHIFT 16
+#define BCM2835_SPI0_CS_ADCS_SHIFT 11
+#define BCM2835_SPI0_CS_INTR_SHIFT 10
+#define BCM2835_SPI0_CS_INTD_SHIFT 9
+#define BCM2835_SPI0_CS_DMAEN_SHIFT 8
+#define BCM2835_SPI0_CS_TA_SHIFT 7
+#define BCM2835_SPI0_CS_CLEAR_RX_SHIFT 5
+#define BCM2835_SPI0_CS_CLEAR_TX_SHIFT 4
+#define BCM2835_SPI0_CS_CPOL_SHIFT 3
+#define BCM2835_SPI0_CS_CPHA_SHIFT 2
+#define BCM2835_SPI0_CS_CS_SHIFT 0
 
-#define GPIO_SPI0_MOSI  10        // Pin P1-19, MOSI when SPI0 in use
-#define GPIO_SPI0_MISO   9        // Pin P1-21, MISO when SPI0 in use
-#define GPIO_SPI0_CLK   11        // Pin P1-23, CLK when SPI0 in use
-#define GPIO_SPI0_CE0    8        // Pin P1-24, CE0 when SPI0 in use
-#define GPIO_SPI0_CE1    7        // Pin P1-26, CE1 when SPI0 in use
+#define GPIO_SPI0_MOSI 10 // Pin P1-19, MOSI when SPI0 in use
+#define GPIO_SPI0_MISO 9  // Pin P1-21, MISO when SPI0 in use
+#define GPIO_SPI0_CLK 11  // Pin P1-23, CLK when SPI0 in use
+#define GPIO_SPI0_CE0 8   // Pin P1-24, CE0 when SPI0 in use
+#define GPIO_SPI0_CE1 7   // Pin P1-26, CE1 when SPI0 in use
 
 extern volatile void *bcm2835;
 
 typedef struct GPIORegisterFile
 {
   uint32_t gpfsel[6], reserved0; // GPIO Function Select registers, 3 bits per pin, 10 pins in an uint32_t
-  uint32_t gpset[2], reserved1; // GPIO Pin Output Set registers, write a 1 to bit at index I to set the pin at index I high
-  uint32_t gpclr[2], reserved2; // GPIO Pin Output Clear registers, write a 1 to bit at index I to set the pin at index I low
+  uint32_t gpset[2], reserved1;  // GPIO Pin Output Set registers, write a 1 to bit at index I to set the pin at index I high
+  uint32_t gpclr[2], reserved2;  // GPIO Pin Output Clear registers, write a 1 to bit at index I to set the pin at index I low
   uint32_t gplev[2];
 } GPIORegisterFile;
 extern volatile GPIORegisterFile *gpio;
 
-#define SET_GPIO_MODE(pin, mode) gpio->gpfsel[(pin)/10] = (gpio->gpfsel[(pin)/10] & ~(0x7 << ((pin) % 10) * 3)) | ((mode) << ((pin) % 10) * 3)
-#define GET_GPIO_MODE(pin) ((gpio->gpfsel[(pin)/10] & (0x7 << ((pin) % 10) * 3)) >> (((pin) % 10) * 3))
+#define SET_GPIO_MODE(pin, mode) gpio->gpfsel[(pin) / 10] = (gpio->gpfsel[(pin) / 10] & ~(0x7 << ((pin) % 10) * 3)) | ((mode) << ((pin) % 10) * 3)
+#define GET_GPIO_MODE(pin) ((gpio->gpfsel[(pin) / 10] & (0x7 << ((pin) % 10) * 3)) >> (((pin) % 10) * 3))
 #define GET_GPIO(pin) (gpio->gplev[0] & (1 << (pin))) // Pin must be (0-31)
-#define SET_GPIO(pin) gpio->gpset[0] = 1 << (pin) // Pin must be (0-31)
-#define CLEAR_GPIO(pin) gpio->gpclr[0] = 1 << (pin) // Pin must be (0-31)
+#define SET_GPIO(pin) gpio->gpset[0] = 1 << (pin)     // Pin must be (0-31)
+#define CLEAR_GPIO(pin) gpio->gpclr[0] = 1 << (pin)   // Pin must be (0-31)
 
 typedef struct SPIRegisterFile
 {
@@ -77,17 +77,6 @@ typedef struct SPIRegisterFile
   uint32_t dlen; // SPI Master Number of DMA Bytes to Write
 } SPIRegisterFile;
 extern volatile SPIRegisterFile *spi;
-
-#define BEGIN_SPI_COMMUNICATION() do { spi->cs = BCM2835_SPI0_CS_TA | DISPLAY_SPI_DRIVE_SETTINGS; } while(0)
-#define END_SPI_COMMUNICATION()  do { \
-    uint32_t cs; \
-    while (!(((cs = spi->cs) ^ BCM2835_SPI0_CS_TA) & (BCM2835_SPI0_CS_DONE | BCM2835_SPI0_CS_TA))) /* While TA=1 and DONE=0*/ \
-    { \
-      if ((cs & (BCM2835_SPI0_CS_RXR | BCM2835_SPI0_CS_RXF))) \
-        spi->cs = BCM2835_SPI0_CS_CLEAR_RX | BCM2835_SPI0_CS_TA | DISPLAY_SPI_DRIVE_SETTINGS; \
-    } \
-    spi->cs = BCM2835_SPI0_CS_CLEAR_RX | DISPLAY_SPI_DRIVE_SETTINGS; /* Clear TA and any pending bytes */ \
-  } while(0)
 
 int mem_fd = -1;
 volatile void *bcm2835 = 0;
@@ -113,9 +102,9 @@ void WaitForPolledSPITransferToFinish()
 
 void sendCmd(uint8_t cmd, uint8_t *payload, uint32_t payloadSize)
 {
-  WaitForPolledSPITransferToFinish();
+  // WaitForPolledSPITransferToFinish();
 
-  BEGIN_SPI_COMMUNICATION();
+  spi->cs = BCM2835_SPI0_CS_TA | DISPLAY_SPI_DRIVE_SETTINGS; // Spi begins transfer
 
   // An SPI transfer to the display always starts with one control (command) byte, followed by N data bytes.
   CLEAR_GPIO(GPIO_TFT_DATA_CONTROL);
@@ -145,7 +134,7 @@ void sendCmd(uint8_t cmd, uint8_t *payload, uint32_t payloadSize)
     }
   }
 
-  END_SPI_COMMUNICATION();
+  WaitForPolledSPITransferToFinish();
 }
 
 void sendCmd(uint8_t cmd)
