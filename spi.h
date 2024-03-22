@@ -78,36 +78,6 @@ typedef struct SPIRegisterFile
 } SPIRegisterFile;
 extern volatile SPIRegisterFile *spi;
 
-// Defines the size of the SPI task memory buffer in bytes. This memory buffer can contain two frames worth of tasks at maximum,
-// so for best performance, should be at least ~DISPLAY_WIDTH*DISPLAY_HEIGHT*BYTES_PER_PIXEL*2 bytes in size, plus some small
-// amount for structuring each SPITask command. Technically this can be something very small, like 4096b, and not need to contain
-// even a single full frame of data, but such small buffers can cause performance issues from threads starving.
-#define SHARED_MEMORY_SIZE (DISPLAY_DRAWABLE_WIDTH*DISPLAY_DRAWABLE_HEIGHT*SPI_BYTESPERPIXEL*3)
-#define SPI_QUEUE_SIZE (SHARED_MEMORY_SIZE - sizeof(SharedMemory))
-
-#define SPI_9BIT_TASK_PADDING_BYTES 0
-
-// Defines the maximum size of a single SPI task, in bytes. This excludes the command byte. If MAX_SPI_TASK_SIZE
-// is not defined, there is no length limit that applies. (In ALL_TASKS_SHOULD_DMA version of DMA transfer,
-// there is DMA chaining, so SPI tasks can be arbitrarily long)
-#ifndef ALL_TASKS_SHOULD_DMA
-#define MAX_SPI_TASK_SIZE 65528
-#endif
-
-typedef struct __attribute__((packed)) SPITask
-{
-  uint32_t size; // Size, including both 8-bit and 9-bit tasks
-  uint8_t cmd;
-  uint32_t dmaSpiHeader;
-  uint8_t data[]; // Contains both 8-bit and 9-bit tasks back to back, 8-bit first, then 9-bit.
-
-  inline uint8_t *PayloadStart() { return data; }
-  inline uint8_t *PayloadEnd() { return data + size; }
-  inline uint32_t PayloadSize() const { return size; }
-  inline uint32_t *DmaSpiHeaderAddress() { return &dmaSpiHeader; }
-
-} SPITask;
-
 #define BEGIN_SPI_COMMUNICATION() do { spi->cs = BCM2835_SPI0_CS_TA | DISPLAY_SPI_DRIVE_SETTINGS; } while(0)
 #define END_SPI_COMMUNICATION()  do { \
     uint32_t cs; \
@@ -117,15 +87,6 @@ typedef struct __attribute__((packed)) SPITask
         spi->cs = BCM2835_SPI0_CS_CLEAR_RX | BCM2835_SPI0_CS_TA | DISPLAY_SPI_DRIVE_SETTINGS; \
     } \
     spi->cs = BCM2835_SPI0_CS_CLEAR_RX | DISPLAY_SPI_DRIVE_SETTINGS; /* Clear TA and any pending bytes */ \
-  } while(0)
-
-#define WAIT_SPI_FINISHED()  do { \
-    uint32_t cs; \
-    while (!((cs = spi->cs) & BCM2835_SPI0_CS_DONE)) /* While DONE=0*/ \
-    { \
-      if ((cs & (BCM2835_SPI0_CS_RXR | BCM2835_SPI0_CS_RXF))) \
-        spi->cs = BCM2835_SPI0_CS_CLEAR_RX | BCM2835_SPI0_CS_TA | DISPLAY_SPI_DRIVE_SETTINGS; \
-    } \
   } while(0)
 
 int mem_fd = -1;
