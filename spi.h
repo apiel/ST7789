@@ -121,7 +121,6 @@ void sendCmd(uint8_t cmd, uint8_t *payload, uint32_t payloadSize)
 
     uint8_t *tStart = payload;
     uint8_t *tEnd = payload + payloadSize;
-    // uint8_t *tPrefillEnd = tStart + MIN(15, payloadSize);
     uint8_t *tPrefillEnd = tStart + (payloadSize > 15 ? 15 : payloadSize);
 
     while (tStart < tPrefillEnd)

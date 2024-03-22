@@ -27,19 +27,19 @@ void drawPixel(uint16_t x, uint16_t y, uint16_t color)
 
 void drawFillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
+  uint16_t size = w * BYTESPERPIXEL;
+  uint8_t pixels[size];
+  uint8_t pixel[BYTESPERPIXEL] = {color >> 8, color & 0xFF};
+  for (uint16_t i = 0; i < size; i += BYTESPERPIXEL)
+  {
+    pixels[i] = pixel[0];
+    pixels[i + 1] = pixel[1];
+  }
+
   for (int yPos = 0; yPos < h; ++yPos)
   {
     sendAddr(DISPLAY_SET_CURSOR_X, x, x + w);
     sendAddr(DISPLAY_SET_CURSOR_Y, y + yPos, y + yPos);
-
-    uint16_t size = w * BYTESPERPIXEL;
-    uint8_t pixels[size];
-    uint8_t pixel[BYTESPERPIXEL] = {color >> 8, color & 0xFF};
-    for (uint16_t i = 0; i < size; i += BYTESPERPIXEL)
-    {
-      pixels[i] = pixel[0];
-      pixels[i + 1] = pixel[1];
-    }
     sendCmd(DISPLAY_WRITE_PIXELS, pixels, size);
   }
 }
